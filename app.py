@@ -8,7 +8,7 @@ def index():
     return jsonify({
         "message": "Welcome to the Terabox Downloader API!",
         "usage": "Send a GET request to /api/tbox with a 'url' query parameter containing the Terabox link.",
-        "example": "/api/tbox?url=https://1024terabox.com/s/1_tvTC5pR7APls9j49ZRsaw",
+        "example": "/api/tbox?url=https://terabox.com/s/1kpYz6J8xalpQtoDk4DH8Aw",
         "author": "Mahir Labib",
         "contact": "https://t.me/no_coder_pro"
     })

@@ -3,6 +3,16 @@ from TeraboxDL import TeraboxDL
 
 app = Flask(__name__)
 
+@app.route('/', methods=['GET'])
+def index():
+    return jsonify({
+        "message": "Welcome to the Terabox Downloader API!",
+        "usage": "Send a GET request to /api/tbox with a 'url' query parameter containing the Terabox link.",
+        "example": "/api/tbox?url=https://1024terabox.com/s/1_tvTC5pR7APls9j49ZRsaw",
+        "author": "Mahir Labib",
+        "contact": "https://t.me/no_coder_pro"
+    })
+
 @app.route('/api/tbox', methods=['GET'])
 def get_file_info():
     terabox_url = request.args.get('url')

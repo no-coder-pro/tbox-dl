@@ -1,2 +1,2 @@
 Flask
-TeraboxDL
+terabox-downloader

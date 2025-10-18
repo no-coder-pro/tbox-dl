@@ -1,2 +1,5 @@
-Flask
+flask[async]
+aiohttp
+requests
+urllib3
 terabox-downloader

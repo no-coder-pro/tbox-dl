@@ -20,7 +20,7 @@ def get_file_info():
         return jsonify({"error": "url parameter is required"}), 400
 
     # The cookie can be made more dynamic, e.g., passed as a header
-    cookie = "lang=en; ndus=YvVzggYteHuiMBvH0QNQzXPqMn2wEcdOv03qsEvU"
+    cookie = "lang=en; ndus=Y4gNL3EteHuiltx5aeJ97I7g6uzMteYmPV6_woT1"
     
     try:
         terabox = TeraboxDL(cookie)

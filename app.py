@@ -5,12 +5,10 @@ import logging
 from urllib.parse import parse_qs, urlparse
 import os
 
-# Configure logging
 logging.basicConfig(level=logging.INFO)
 
 app = Flask(__name__)
 
-# Main cookies - এই কুকি থেকে সব এন্ডপয়েন্ট ব্যবহার করবে
 cookies = {
     'csrfToken': 'gCJ3QYY5xl4n1QdJg9ET7cVt',
     'browserid': 'xf7hSqn2ZlNm1RllRTeAgAuGk8_3SkSg7CPTY4XqNhJvGrIAAz185B8tmPc=',

@@ -322,26 +322,23 @@ def proxy_api():
         url = request.args.get('url', 'No URL Provided')
         logging.info(f"Received request for /api/proxy with URL: {url}")
         
-        # Headers for the backend API
+        # Headers for the backend API - EXACTLY like curl
         proxy_headers = {
             'User-Agent': 'okhttp/5.0.0-alpha.10',
             'Connection': 'Keep-Alive',
-            'Content-Type': 'application/json; application/json; charset=utf-8',
+            'Accept-Encoding': 'gzip',  # Added this
+            'Content-Type': 'application/json',  # Only one Content-Type
             'key': 'i094kjad090asd43094@asdj4390945',
         }
         
-        # JSON data for the backend API
-        json_data = {
-            'url': url,
-            'folder': '',
-            'deviceId': '48eb081d1d5b0afd',
-            'token': '1aMnclhhS8tSw0mlyYlEobft0m1BrMI6d8WyEfWfWiLW18T4e9MsyySr4VmUSVYMQ4L76kF8gt2jTZYwKeNC7bGjid6KiWlaEneDiAr7aE8=',
-        }
+        json_data_raw = f'{{"url": "{url}","folder":"","deviceId":"48eb081d1d5b0afd","token":"1aMnclhhS8tSw0mlyYlEobft0m1BrMI6d8WyEfWfWiLW18T4e9MsyySr4VmUSVYMQ4L76kF8gt2jTZYwKeNC7bGjid6KiWlaEneDiAr7aE8="}}'
         
-        # Make request to backend API
-        response = requests.post('https://tera.backend.live/android', headers=proxy_headers, json=json_data)
+        response = requests.post(
+            'https://tera.backend.live/android', 
+            headers=proxy_headers, 
+            data=json_data_raw  # Use data instead of json
+        )
         
-        # Return the response from backend API
         if response.status_code == 200:
             return jsonify({
                 'status': 'success',
@@ -349,6 +346,7 @@ def proxy_api():
                 'backend_response': response.json()
             })
         else:
+            logging.error(f"Backend API error: {response.status_code} - {response.text}")
             return jsonify({
                 'status': 'error',
                 'message': f'Backend API returned status code: {response.status_code}',
@@ -363,7 +361,8 @@ def proxy_api():
             'message': str(e),
             'ShortLink': url
         })
-
+    
+    
 @app.route(rule='/help', methods=['GET'])
 async def help():
     response = {

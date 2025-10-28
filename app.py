@@ -4,6 +4,7 @@ import asyncio
 import logging
 from urllib.parse import parse_qs, urlparse
 import os
+import requests
 
 logging.basicConfig(level=logging.INFO)
 
@@ -274,9 +275,10 @@ def hello_world():
     response = {
         'status': 'success',
         'message': 'Welcome to the TeraBox Direct Downloader API!',
-        'usage': 'To use the API, please use the /api/tera?url= or /api/tbox?url= endpoints.',
+        'usage': 'To use the API, please use the /api/tera?url= or /api/tbox?url= or /api/proxy?url= endpoints.',
         'api 1 - advance': '/api/tbox?url=https://1024terabox.com/s/1JgR2kxkwLsM7kEpj2Gntvw',
         'api 2 - standerd': '/api/tera?url=https://1024terabox.com/s/1JgR2kxkwLsM7kEpj2Gntvw',
+        'api 3 - proxy': '/api/proxy?url=https://1024terabox.com/s/1JgR2kxkwLsM7kEpj2Gntvw',
         'help': '/help for more details',
         'contact': '@no_coder_pro'
     }
@@ -314,13 +316,62 @@ async def Api2():
         logging.error(f"An error occurred in /api/tbox: {e}")
         return jsonify({'status': 'error', 'message': str(e), 'Link': url})
 
+@app.route(rule='/api/proxy', methods=['GET'])
+def proxy_api():
+    try:
+        url = request.args.get('url', 'No URL Provided')
+        logging.info(f"Received request for /api/proxy with URL: {url}")
+        
+        # Headers for the backend API
+        proxy_headers = {
+            'User-Agent': 'okhttp/5.0.0-alpha.10',
+            'Connection': 'Keep-Alive',
+            'Content-Type': 'application/json; application/json; charset=utf-8',
+            'key': 'i094kjad090asd43094@asdj4390945',
+        }
+        
+        # JSON data for the backend API
+        json_data = {
+            'url': url,
+            'folder': '',
+            'deviceId': '48eb081d1d5b0afd',
+            'token': '1aMnclhhS8tSw0mlyYlEobft0m1BrMI6d8WyEfWfWiLW18T4e9MsyySr4VmUSVYMQ4L76kF8gt2jTZYwKeNC7bGjid6KiWlaEneDiAr7aE8=',
+        }
+        
+        # Make request to backend API
+        response = requests.post('https://tera.backend.live/android', headers=proxy_headers, json=json_data)
+        
+        # Return the response from backend API
+        if response.status_code == 200:
+            return jsonify({
+                'status': 'success',
+                'ShortLink': url,
+                'backend_response': response.json()
+            })
+        else:
+            return jsonify({
+                'status': 'error',
+                'message': f'Backend API returned status code: {response.status_code}',
+                'ShortLink': url,
+                'backend_response': response.text
+            })
+            
+    except Exception as e:
+        logging.error(f"An error occurred in /api/proxy: {e}")
+        return jsonify({
+            'status': 'error',
+            'message': str(e),
+            'ShortLink': url
+        })
+
 @app.route(rule='/help', methods=['GET'])
 async def help():
     response = {
         'Info': "There are multiple ways to use this API as shown below",
-        'usage': 'To use the API, please use the /api/tera?url= or /api/tbox?url= endpoints.',
+        'usage': 'To use the API, please use the /api/tera?url= or /api/tbox?url= or /api/proxy?url= endpoints.',
         'api 1 - advance': '/api/tbox?url=https://1024terabox.com/s/1JgR2kxkwLsM7kEpj2Gntvw',
         'api 2 - standerd': '/api/tera?url=https://1024terabox.com/s/1JgR2kxkwLsM7kEpj2Gntvw',
+        'api 3 - proxy': '/api/proxy?url=https://1024terabox.com/s/1JgR2kxkwLsM7kEpj2Gntvw',
         'help': '/help for more details',
         'contact': '@no_coder_pro'
     }
